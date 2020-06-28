@@ -2,4 +2,11 @@
     <string name="app_name">StarGaze</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="content_desc_app_logo">App logo</string>
+    <string name="application_name">StarGaze App</string>
+    <string name="splash_screen_desc">Nasa Astronomy Pictire of the day</string>
+
+    <string name="dummy">The dark shadow of the New Moon reached out and touched planet Earth on June 21.
+        A high definition camera outside the International Space Station captured its passing in this snapshot from lo
+        w Earth orbit near</string>
 </resources>

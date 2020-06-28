@@ -1,10 +1,12 @@
 package com.ambient.stargaze.data.dao
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.ambient.stargaze.data.entities.NasaApodEntity
 
+@Dao
 interface NasaApodDao {
 
     @Insert
