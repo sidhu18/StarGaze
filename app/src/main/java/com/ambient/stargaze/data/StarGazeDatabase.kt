@@ -36,4 +36,4 @@ abstract class StarGazeDatabase : RoomDatabase(){
         }
     }
 
-    }
+}

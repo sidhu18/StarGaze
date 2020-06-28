@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.ambient.stargaze.R
 import kotlinx.android.synthetic.main.splash_fragment.*
 
@@ -28,9 +29,8 @@ class SplashFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
-//        viewModel.apodResponse.observe(viewLifecycleOwner, Observer {
-//            text.text = it
-//        })
+
+        findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
     }
 
 }
