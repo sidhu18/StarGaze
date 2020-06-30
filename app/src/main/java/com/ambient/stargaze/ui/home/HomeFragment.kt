@@ -47,7 +47,7 @@ class HomeFragment : Fragment(){
         binding.viewmodel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.getPictureOfTheDay(StringUtils.formatDateToString(Date(System.currentTimeMillis())))
+        viewModel.fetchApodByDate(StringUtils.formatDateToString(Date(System.currentTimeMillis())))
 
         lifecycle.addObserver(binding.youtubePlayerView)
         binding.imCalender.setOnClickListener{ showCalenderDialog() }
