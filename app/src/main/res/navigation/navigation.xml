@@ -3,20 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/homeFragment">
 
-    <fragment
-        android:id="@+id/splashFragment"
-        android:name="com.ambient.stargaze.ui.splash.SplashFragment"
-        android:label="splash_fragment"
-        tools:layout="@layout/splash_fragment" >
-        <action
-            android:id="@+id/action_splashFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/splashFragment"-->
+<!--        android:name="com.ambient.stargaze.ui.splash.SplashFragment"-->
+<!--        android:label="splash_fragment"-->
+<!--        tools:layout="@layout/splash_fragment" >-->
+<!--        <action-->
+<!--            android:id="@+id/action_splashFragment_to_homeFragment"-->
+<!--            app:destination="@id/homeFragment"/>-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.ambient.stargaze.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_self"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
 </navigation>

@@ -1,6 +1,7 @@
 package com.ambient.stargaze.ui.splash
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,8 +30,6 @@ class SplashFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
-
-        findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
     }
 
 }

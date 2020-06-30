@@ -33,8 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/content_desc_preview_image_of_picture_of_the_day"
-            android:scaleType="centerInside"
-            android:src="@drawable/background"
+            android:scaleType="fitCenter"
+            android:visibility='@{viewmodel.apodResponse.mediaType.equals("image") ? View.VISIBLE : View.GONE }'
             app:imageUrl="@{viewmodel.apodResponse.url}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,6 +42,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
+
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+            android:id="@+id/youtube_player_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:autoPlay="true"
+            android:visibility='@{viewmodel.apodResponse.mediaType.equals("video") ? View.VISIBLE : View.GONE }'
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:showFullScreenButton="false"
+            app:showSeekBar="false"
+            app:showVideoCurrentTime="false"
+            app:showVideoDuration="false"
+            app:showYouTubeButton="false"
+            app:videoId="" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/topContainer"
@@ -70,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_xsmall"
                     android:textColor="@color/colorTextWhiteSecondary"
-                    android:text="@{viewmodel.apodResponse.date}"
+                    android:text="@{StringUtils.changeDateFormat(viewmodel.apodResponse.date)}"
                     tools:text="20 June 2020" />
 
                 <TextView
@@ -128,7 +145,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_large"
                     android:ellipsize="end"
-                    android:maxEms="225"
                     android:maxLines="6"
                     android:textColor="@color/colorTextWhitePrimary"
                     android:text="@{viewmodel.apodResponse.explanation}"
@@ -146,13 +162,25 @@
 
                 <ImageView
                     android:id="@+id/ivPlay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:src="@drawable/ic_play"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
                     android:visibility='@{viewmodel.apodResponse.mediaType.equals("video") ? View.VISIBLE : View.GONE }'
+                    android:padding="@dimen/spacing_small"
+                    android:contentDescription="@string/content_desc_zoom_image" />
+
+                <ImageView
+                    android:id="@+id/ivPause"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_pause"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone"
                     android:padding="@dimen/spacing_small"
                     android:contentDescription="@string/content_desc_zoom_image" />
 

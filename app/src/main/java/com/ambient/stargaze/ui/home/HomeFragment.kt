@@ -2,6 +2,7 @@ package com.ambient.stargaze.ui.home
 
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,15 +14,21 @@ import androidx.lifecycle.ViewModelProvider
 import com.ambient.stargaze.R
 import com.ambient.stargaze.databinding.FragmentHomeBinding
 import com.ambient.stargaze.helpers.StringUtils
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(){
 
     companion object {
         fun newInstance() = HomeFragment()
     }
 
+    private val DEFAUT_MAXLINES = 6
+    private val EXPANDED_MAXLINES = 200
+    private lateinit var youTubePlayer2: YouTubePlayer
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding : FragmentHomeBinding
 
@@ -42,13 +49,60 @@ class HomeFragment : Fragment() {
 
         viewModel.getPictureOfTheDay(StringUtils.formatDateToString(Date(System.currentTimeMillis())))
 
+        lifecycle.addObserver(binding.youtubePlayerView)
         binding.imCalender.setOnClickListener{ showCalenderDialog() }
         binding.ivZoom.setOnClickListener{ zoomImage() }
+        binding.tvDesc.setOnClickListener{ expandOrCollapseText() }
+        binding.ivPlay.setOnClickListener{ playVideo() }
+        binding.ivPause.setOnClickListener{ pauseVideo() }
+
+
+        binding.youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                youTubePlayer2 = youTubePlayer
+                youTubePlayer2.cueVideo("",0f)
+            }
+        })
+
+        viewModel.apodResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer { it ->
+            it?.let {
+                if(it.mediaType == "video") {
+                    it.url?.let { it1 -> StringUtils.getYoutubeVideoId(it1) }?.let { it2 ->
+                        youTubePlayer2.cueVideo(
+                            it2, 0f
+                        )
+                    }
+                }
+            }
+        })
+
 
     }
 
+    private fun playVideo(){
+        ivPlay.visibility = View.GONE
+        ivPause.visibility = View.VISIBLE
+        youTubePlayer2.play()
+    }
+
+    private fun pauseVideo(){
+        ivPlay.visibility = View.VISIBLE
+        ivPause.visibility = View.GONE
+        youTubePlayer2.pause()
+    }
+
     private fun zoomImage() {
-        binding.ivZoom.scaleType = ImageView.ScaleType.CENTER_CROP
+        if(binding.imageView3.scaleType == ImageView.ScaleType.FIT_CENTER){
+            binding.imageView3.scaleType = ImageView.ScaleType.CENTER_CROP
+        } else
+            binding.imageView3.scaleType = ImageView.ScaleType.FIT_CENTER
+    }
+
+    private fun expandOrCollapseText(){
+        if(binding.tvDesc.maxLines == DEFAUT_MAXLINES)
+            binding.tvDesc.maxLines = EXPANDED_MAXLINES
+        else
+            binding.tvDesc.maxLines = DEFAUT_MAXLINES
     }
 
     private fun showCalenderDialog(){
@@ -65,6 +119,7 @@ class HomeFragment : Fragment() {
             this.requireContext(),
             OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 viewModel.fetchApodByDate(year.toString() + "-"+ checkDigit(monthOfYear + 1).toString() + "-"+ checkDigit(dayOfMonth).toString())
+                zoomImage()
             },
             mYear,
             mMonth,

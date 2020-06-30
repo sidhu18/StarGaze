@@ -1,5 +1,6 @@
 package com.ambient.stargaze
 
+import com.ambient.stargaze.helpers.StringUtils
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -11,7 +12,6 @@ import org.junit.Assert.*
  */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun getId_isCorrect() {
     }
 }
