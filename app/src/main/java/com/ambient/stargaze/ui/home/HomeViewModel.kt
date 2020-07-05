@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.ambient.stargaze.data.StarGazeDatabase
 import com.ambient.stargaze.data.entities.NasaApodEntity
 import com.ambient.stargaze.data.repositories.NasaApodRepository
+import com.ambient.stargaze.helpers.StringUtils
 import com.ambient.stargaze.network.ApodApi
 import com.ambient.stargaze.network.ApodProperty
 import kotlinx.coroutines.CoroutineScope
@@ -15,6 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
+import java.util.*
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -29,6 +31,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         apodRepository = NasaApodRepository(StarGazeDatabase.getInstance(application))
+        fetchApodByDate(StringUtils.formatDateToString(Date(System.currentTimeMillis())))
     }
 
     private fun getLatestApod(){

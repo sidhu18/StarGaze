@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ambient.stargaze.R
 import com.ambient.stargaze.databinding.FragmentHomeBinding
 import com.ambient.stargaze.helpers.StringUtils
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -47,22 +48,8 @@ class HomeFragment : Fragment(){
         binding.viewmodel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.fetchApodByDate(StringUtils.formatDateToString(Date(System.currentTimeMillis())))
-
         lifecycle.addObserver(binding.youtubePlayerView)
-        binding.imCalender.setOnClickListener{ showCalenderDialog() }
-        binding.ivZoom.setOnClickListener{ zoomImage() }
-        binding.tvDesc.setOnClickListener{ expandOrCollapseText() }
-        binding.ivPlay.setOnClickListener{ playVideo() }
-        binding.ivPause.setOnClickListener{ pauseVideo() }
-
-
-        binding.youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-            override fun onReady(youTubePlayer: YouTubePlayer) {
-                youTubePlayer2 = youTubePlayer
-                youTubePlayer2.cueVideo("",0f)
-            }
-        })
+        initViewListeners()
 
         viewModel.apodResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer { it ->
             it?.let {
@@ -79,16 +66,51 @@ class HomeFragment : Fragment(){
 
     }
 
+    private fun initViewListeners() {
+        binding.imCalender.setOnClickListener{ showCalenderDialog() }
+        binding.ivZoom.setOnClickListener{ zoomImage() }
+        binding.tvDesc.setOnClickListener{ expandOrCollapseText() }
+        binding.ivPlay.setOnClickListener{ playVideo() }
+        binding.ivPause.setOnClickListener{ pauseVideo() }
+
+
+        binding.youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                youTubePlayer2 = youTubePlayer
+                youTubePlayer2.cueVideo("",0f)
+            }
+
+            override fun onStateChange(
+                youTubePlayer: YouTubePlayer,
+                state: PlayerConstants.PlayerState
+            ) {
+                super.onStateChange(youTubePlayer, state)
+                when(state){
+                    PlayerConstants.PlayerState.PLAYING -> setPlayingState()
+                    PlayerConstants.PlayerState.PAUSED -> setPauseState()
+                }
+            }
+        })
+    }
+
     private fun playVideo(){
-        ivPlay.visibility = View.GONE
-        ivPause.visibility = View.VISIBLE
+        setPlayingState()
         youTubePlayer2.play()
     }
 
+    private fun setPlayingState(){
+        ivPlay.visibility = View.GONE
+        ivPause.visibility = View.VISIBLE
+    }
+
     private fun pauseVideo(){
+        setPauseState()
+        youTubePlayer2.pause()
+    }
+
+    private fun setPauseState(){
         ivPlay.visibility = View.VISIBLE
         ivPause.visibility = View.GONE
-        youTubePlayer2.pause()
     }
 
     private fun zoomImage() {
@@ -119,7 +141,6 @@ class HomeFragment : Fragment(){
             this.requireContext(),
             OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 viewModel.fetchApodByDate(year.toString() + "-"+ checkDigit(monthOfYear + 1).toString() + "-"+ checkDigit(dayOfMonth).toString())
-                zoomImage()
             },
             mYear,
             mMonth,

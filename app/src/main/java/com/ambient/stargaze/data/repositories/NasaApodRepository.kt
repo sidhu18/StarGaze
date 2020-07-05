@@ -23,9 +23,11 @@ data class NasaApodRepository(private val database: StarGazeDatabase){
 
     suspend fun fetchApodByDate(date: String) : NasaApodEntity? {
         withContext(Dispatchers.IO) {
-            val apod = getPictureOfTheDayByDate(date)
-            apod?.asDomainModel()?.let {
-                insertApod(it)
+            if(getApodByDate(date) == null) {
+                val apod = getPictureOfTheDayByDate(date)
+                apod?.asDomainModel()?.let {
+                    insertApod(it)
+                }
             }
         }
         return getApodByDate(date)
