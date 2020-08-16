@@ -5,7 +5,6 @@ Stargaze application brings you the wonders of space everyday, with a brief desc
 ## Table of Contents
 
 * [About the Project](#about-the-project)
-  * [Concepts used](#concepts-used)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
